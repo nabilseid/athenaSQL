@@ -1,8 +1,7 @@
-from adflow.sql.column import ConditionalColumn
+from athenaSQL.column import ConditionalColumn
 
-from adflow.sql.functions.functions import _create_unary_function, \
-        _create_binary_function, \
-        _create_nullnary_function
+from athenaSQL.functions.functions import _create_binary_function
+    
 
 _binary_functions = {
     'regexp_count': 'Returns the number of occurrence of pattern in string.',
@@ -26,4 +25,3 @@ for _name, _doc in _conditioal_binary_functions.items():
     globals()[_name] = _create_binary_function(_name,
                                                _doc,
                                                func_type=ConditionalColumn)
-

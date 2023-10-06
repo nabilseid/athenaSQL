@@ -1,14 +1,13 @@
 import copy
 from jinja2 import Template
 
-from adflow.sql.queries.query_abc import QueryABC, \
-        _exit_on_override, \
-        _exit_on_partial_query, \
-        _exit_on_uncalled_preceding_method, \
-        _check_and_extract_list_or_valid_typed_arguments
+from athenaSQL.queries.query_abc import QueryABC, \
+    _exit_on_override, \
+    _exit_on_partial_query, \
+    _check_and_extract_list_or_valid_typed_arguments
 
-from adflow.sql.column import Column
-from adflow.sql.queries.select import SelectQuery
+from athenaSQL.column import Column
+from athenaSQL.queries.select import SelectQuery
 
 insert_query_template = """
 INSERT INTO "{{database}}"."{{table}}"
@@ -42,7 +41,7 @@ class InsertQuery(QueryABC):
         """
         """
 
-        # required attributes 
+        # required attributes
         req_att = {'insert': self._select_query}
 
         # check if query constraction is complete
@@ -50,23 +49,23 @@ class InsertQuery(QueryABC):
             _exit_on_partial_query(att, method, 'InsertQuery')
 
         return Template(insert_query_template).render(
-                    database=self._database,
-                    table=self._table,
-                    columns=self._column_order,
-                    select_query=self._select_query._to_sql()
-                ).strip()
+            database=self._database,
+            table=self._table,
+            columns=self._column_order,
+            select_query=self._select_query._to_sql()
+        ).strip()
 
     def insert(self, select_query):
         """
         """
-        # check if method is already been called in an instance 
+        # check if method is already been called in an instance
         _exit_on_override(self._select_query, 'insert', 'insert(SelectQuery)')
 
-        # 
+        #
         arguments = _check_and_extract_list_or_valid_typed_arguments(
-                        select_query,
-                        'insert',
-                        valid_types=SelectQuery)
+            select_query,
+            'insert',
+            valid_types=SelectQuery)
 
         clone_obj = copy.deepcopy(self)
         clone_obj._select_query = arguments
@@ -78,14 +77,15 @@ class InsertQuery(QueryABC):
         """
 
         #
-        _exit_on_override(self._column_order, 'column_order', 'column_order(cols)')
+        _exit_on_override(self._column_order, 'column_order',
+                          'column_order(cols)')
 
         #
         arguments = _check_and_extract_list_or_valid_typed_arguments(
-                        cols,
-                        'column_order',
-                        valid_types=(str, Column)
-                    )
+            cols,
+            'column_order',
+            valid_types=(str, Column)
+        )
 
         # convert string to column type
         columns = list(map(lambda arg: Column(str(arg)), arguments))
@@ -94,4 +94,3 @@ class InsertQuery(QueryABC):
         clone_obj._column_order = columns
 
         return clone_obj
-

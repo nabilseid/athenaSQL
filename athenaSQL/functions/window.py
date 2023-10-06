@@ -1,6 +1,6 @@
-from adflow.sql.column import WindowColumn
+from athenaSQL.column import WindowColumn
 
-from adflow.sql.functions.functions import _create_window_function
+from athenaSQL.functions.functions import _create_window_function
 
 _window_functions = {
     'cume_dist': 'Returns the cumulative distribution of a value in a group of values',
@@ -13,7 +13,9 @@ _window_functions = {
 for _name, _doc in _window_functions.items():
     globals()[_name] = _create_window_function(_name, _doc)
 
-#ntile(n)
+# ntile(n)
+
+
 def ntile(n):
     """
     Divides the rows for each window partition into n buckets ranging 
@@ -26,14 +28,18 @@ def ntile(n):
     wCol = WindowColumn('ntile', n)
     return wCol
 
-#first_value(x)
+# first_value(x)
+
+
 def first_value(x):
     """
     """
     wCol = WindowColumn('first_value', x)
     return wCol
 
-#last_value(x)
+# last_value(x)
+
+
 def last_value(x):
     """
     """
@@ -41,13 +47,17 @@ def last_value(x):
     return x
 
 #nth_value(x, offset)
+
+
 def nth_value(x, offset):
     """
     """
     wCol = WindowColumn('nth_value', x, offset)
     return wCol
 
-#lead(x[, offset[, default_value]])
+# lead(x[, offset[, default_value]])
+
+
 def lead(x, offset=None, default_value=None):
     """
     """
@@ -60,7 +70,9 @@ def lead(x, offset=None, default_value=None):
 
     return wCol
 
-#lag(x[, offset[, default_value]])
+# lag(x[, offset[, default_value]])
+
+
 def lag(x, offset, default_value):
     """
     """

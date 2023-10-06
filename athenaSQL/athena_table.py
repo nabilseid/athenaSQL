@@ -1,8 +1,5 @@
-from adflow.sql.queries import (
-    SelectQuery,
-    InsertQuery,
-    CreateQuery,
-    CreateAsQuery)
+from athenaSQL.queries import SelectQuery, InsertQuery, \
+                                CreateQuery, CreateAsQuery
 
 class AthenaTable:
     """

@@ -1,3 +1,4 @@
-from athenasql.athena import Athena
-from athenaSQL.athena_table import AthenaTable, TempTable
-from athenaSQL.column import Column
+from .athena import Athena
+from .athena_table import AthenaTable, TempTable
+from .column import Column
+from .errors import PartialQueryError

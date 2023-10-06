@@ -1,15 +1,11 @@
 import copy
 from jinja2 import Template
 
-from adflow.sql.queries.query_abc import QueryABC, \
-        _exit_on_override, \
-        _exit_on_partial_query, \
-        _exit_on_uncalled_preceding_method, \
-        _check_and_extract_list_or_valid_typed_arguments
+from athenaSQL.queries.query_abc import QueryABC, \
+    _exit_on_override, \
+    _exit_on_partial_query
 
-from adflow.sql.orders import ASC, DESC
-from adflow.sql.column import Column 
-from adflow.sql.queries.select import SelectQuery
+from athenaSQL.queries.select import SelectQuery
 
 create_as_query_template = """
 
@@ -48,14 +44,16 @@ WITH NO DATA
 {%- endif -%}
 """
 
+
 class CreateAsQuery(QueryABC):
     """
     Creates a new table populated with the results of a SELECT query.
     https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html
     """
+
     def __init__(self, database, table):
         self._database = database
-        self._table = table 
+        self._table = table
 
         self._tbl_properties = {}
         self._select_query = None
@@ -69,12 +67,12 @@ class CreateAsQuery(QueryABC):
             _exit_on_partial_query(att, method, 'CreateAsQuery')
 
         return Template(create_as_query_template).render(
-                    database=self._database,
-                    table=self._table,
-                    select_query=self._select_query,
-                    tbl_properties=self._tbl_properties,
-                    with_data=self._with_data
-                ).strip()
+            database=self._database,
+            table=self._table,
+            select_query=self._select_query,
+            tbl_properties=self._tbl_properties,
+            with_data=self._with_data
+        ).strip()
 
     def withData(self, opt):
         """
@@ -94,11 +92,12 @@ class CreateAsQuery(QueryABC):
         """
         """
 
-        _exit_on_override(self._select_query, 'createAs', 'createAs(SelectQuery)')
+        _exit_on_override(self._select_query, 'createAs',
+                          'createAs(SelectQuery)')
 
         if not isinstance(select_query, SelectQuery):
             raise TypeError(f'`{type(select_query).__name__}` is not of a '
-                             'type `SelectQuery`')
+                            'type `SelectQuery`')
 
         clone_obj = copy.deepcopy(self)
         clone_obj._select_query = select_query
@@ -121,5 +120,3 @@ class CreateAsQuery(QueryABC):
         clone_obj._tbl_properties = props
 
         return clone_obj
-
-

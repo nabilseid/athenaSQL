@@ -1,14 +1,13 @@
 import copy
 from jinja2 import Template
 
-from adflow.sql.queries.query_abc import QueryABC, \
-        _exit_on_override, \
-        _exit_on_partial_query, \
-        _exit_on_uncalled_preceding_method, \
-        _check_and_extract_list_or_valid_typed_arguments
+from athenaSQL.queries.query_abc import QueryABC, \
+    _exit_on_override, \
+    _exit_on_partial_query, \
+    _check_and_extract_list_or_valid_typed_arguments
 
-from adflow.sql.orders import ASC, DESC
-from adflow.sql.column import Column 
+from athenaSQL.orders import ASC, DESC
+from athenaSQL.column import Column
 
 window_query_template = """
 OVER (
@@ -32,6 +31,7 @@ OVER (
     {% endif %})
 """
 
+
 class WindowQuery(QueryABC):
     """
     A query class to constract to constract the clause after and including
@@ -48,24 +48,25 @@ class WindowQuery(QueryABC):
 
     def _to_sql(self):
 
-        # check if query constraction is complete 
+        # check if query constraction is complete
         _exit_on_partial_query(
-                (self._partitions or self._orders),
-                'partitionBy', 'WindowQuery')
-        
+            (self._partitions or self._orders),
+            'partitionBy', 'WindowQuery')
+
         return Template(window_query_template).render(
-                partitions=self._partitions,
-                orders=self._orders
-            ).strip()
+            partitions=self._partitions,
+            orders=self._orders
+        ).strip()
 
     def partitionBy(self, *cols):
         """
         """
         # check if method is already been called in an instance
-        _exit_on_override(self._partitions, 'partitionBy', 'partitionBy(*cols)')
+        _exit_on_override(self._partitions, 'partitionBy',
+                          'partitionBy(*cols)')
 
         arguments = _check_and_extract_list_or_valid_typed_arguments(
-                        cols, 'partitionBy')
+            cols, 'partitionBy')
 
         clone_obj = copy.deepcopy(self)
         clone_obj._partitions = arguments
@@ -79,17 +80,18 @@ class WindowQuery(QueryABC):
         _exit_on_override(self._orders, 'orderBy', 'orderBy(*cols)')
 
         arguments = _check_and_extract_list_or_valid_typed_arguments(
-                        cols, 'orderBy', valid_types=(str, ASC, DESC))
+            cols, 'orderBy', valid_types=(str, ASC, DESC))
 
         # should also be done in Column types
-        ordering_cols = list(map(lambda arg: arg \
-                                 if isinstance(arg, (ASC, DESC)) \
+        ordering_cols = list(map(lambda arg: arg
+                                 if isinstance(arg, (ASC, DESC))
                                  else Column(arg),
-                            arguments))
+                                 arguments))
 
         clone_obj = copy.deepcopy(self)
         clone_obj._orders = ordering_cols
 
         return clone_obj
+
 
 Window = WindowQuery()

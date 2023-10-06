@@ -1,0 +1,2 @@
+class PartialQueryError(Exception):
+    pass

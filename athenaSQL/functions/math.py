@@ -1,10 +1,7 @@
-from adflow.sql.column import Column, AggregateColumn
+from athenaSQL.column import Column, AggregateColumn
 
-from adflow.sql.functions.functions import _create_unary_function, \
-        _create_binary_function, \
-        _create_nullnary_function
-
-from adflow.sql.queries.query_abc import _check_and_extract_list_or_valid_typed_arguments
+from athenaSQL.functions.functions import _create_unary_function, \
+    _create_binary_function
 
 _unary_functions = {}
 

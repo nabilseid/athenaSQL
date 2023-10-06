@@ -1,15 +1,14 @@
 import copy
 from jinja2 import Template
 
-from adflow.sql.queries.query_abc import QueryABC, \
-        _exit_on_override, \
-        _exit_on_partial_query, \
-        _exit_on_uncalled_preceding_method, \
-        _check_and_extract_list_or_valid_typed_arguments
+from athenaSQL.queries.query_abc import QueryABC, \
+    _exit_on_override, \
+    _exit_on_uncalled_preceding_method, \
+    _check_and_extract_list_or_valid_typed_arguments
 
-from adflow.sql.orders import ASC, DESC
-from adflow.sql.column import Column, ConditionalColumn, AliasColumn, \
-        AggregateColumn
+from athenaSQL.orders import ASC, DESC
+from athenaSQL.column import Column, ConditionalColumn, AliasColumn, \
+    AggregateColumn
 
 select_query_template = """
 {% if cte_tables %}
@@ -74,14 +73,13 @@ LIMIT {{limit}}
 """
 
 
-
 class SelectQuery(QueryABC):
     def __init__(self, table, database=None):
         self._table = table
         self._database = database
 
         QueryABC.__init__(self, database, table)
-        
+
         self._cte_tables = {}
         self._columns = []
         self._filters = []
@@ -107,21 +105,21 @@ class SelectQuery(QueryABC):
                                   "expression or inserted in 'groupBy' method")
 
         return Template(select_query_template).render(
-                table=self._table,
-                database=self._database,
-                cte_tables=self._cte_tables,
-                columns=self._columns,
-                filters=self._filters,
-                grouping_cols=self._grouping_cols,
-                group_filters=self._group_filters,
-                ordering_cols=self._ordering_cols,
-                limit=self._limit
-            ).strip()
+            table=self._table,
+            database=self._database,
+            cte_tables=self._cte_tables,
+            columns=self._columns,
+            filters=self._filters,
+            grouping_cols=self._grouping_cols,
+            group_filters=self._group_filters,
+            ordering_cols=self._ordering_cols,
+            limit=self._limit
+        ).strip()
 
     def select(self, *cols):
         """
         specify columns to select 
-        
+
         Parameters
         ----------
         cols: list or str
@@ -129,21 +127,20 @@ class SelectQuery(QueryABC):
         # check if select() method has already been called in an instance
         _exit_on_override(self._columns, 'selects', 'select(cols)')
 
-        # check if argument is either a list, str or Column and return list 
+        # check if argument is either a list, str or Column and return list
         # of args else raises method argument error
-        arguments = _check_and_extract_list_or_valid_typed_arguments(cols, 
+        arguments = _check_and_extract_list_or_valid_typed_arguments(cols,
                                                                      'select')
 
-        columns = list(map(lambda arg: arg 
-                                  if isinstance(arg, (Column, AliasColumn)) 
-                                  else Column(arg),
-                            arguments))
+        columns = list(map(lambda arg: arg
+                           if isinstance(arg, (Column, AliasColumn))
+                           else Column(arg),
+                           arguments))
 
         clone_obj = copy.deepcopy(self)
         clone_obj._columns = columns
-        
-        return clone_obj
 
+        return clone_obj
 
     def filter(self, condition):
         """
@@ -159,7 +156,7 @@ class SelectQuery(QueryABC):
             raise TypeError('.filter() can only accept a ConditionalColumn')
 
         clone_obj = copy.deepcopy(self)
-        # update the instances filters 
+        # update the instances filters
         clone_obj._filters.append(condition)
 
         return clone_obj
@@ -175,12 +172,12 @@ class SelectQuery(QueryABC):
         # check if argument is either a list or string and return list of args
         # else raises method argument error
         # TODO type should be of Column not instance of Column
-        arguments = _check_and_extract_list_or_valid_typed_arguments(cols, 
+        arguments = _check_and_extract_list_or_valid_typed_arguments(cols,
                                                                      'groupBy')
 
         grouping_cols = list(map(lambda arg: arg
-                                        if isinstance(arg, (Column, AliasColumn))
-                                        else Column(arg),
+                                 if isinstance(arg, (Column, AliasColumn))
+                                 else Column(arg),
                                  arguments))
 
         clone_obj = copy.deepcopy(self)
@@ -202,10 +199,11 @@ class SelectQuery(QueryABC):
                                            'groupBy')
 
         if not isinstance(condition, ConditionalColumn):
-            raise TypeError('.filterGroup() can only accept a ConditionalColumn')
-        
+            raise TypeError(
+                '.filterGroup() can only accept a ConditionalColumn')
+
         clone_obj = copy.deepcopy(self)
-        # update group filters 
+        # update group filters
         clone_obj._group_filters.append(condition)
 
         return clone_obj
@@ -219,12 +217,12 @@ class SelectQuery(QueryABC):
         # check all aggs are types of AggregateColumn
         # else raises method argument error
         arguments = _check_and_extract_list_or_valid_typed_arguments(aggs,
-                        'agg', valid_types=(AggregateColumn, AliasColumn))
+                                                                     'agg', valid_types=(AggregateColumn, AliasColumn))
 
-        # if host of AliasColumn is not AggregateColumn throw exception 
+        # if host of AliasColumn is not AggregateColumn throw exception
         for agg in aggs:
-            if (isinstance(agg, AliasColumn) and 
-                not isinstance(agg.host, AggregateColumn)):
+            if (isinstance(agg, AliasColumn) and
+                    not isinstance(agg.host, AggregateColumn)):
                 raise TypeError('`.agg()` can only accept `AggregateColumn` or'
                                 ' it\'s alias.')
 
@@ -274,23 +272,21 @@ class SelectQuery(QueryABC):
         """
         # check if orderBy() method has already been called in an instance
         _exit_on_override(self._ordering_cols,
-                         'ordering columns',
-                         'orderBy(cols)')
+                          'ordering columns',
+                          'orderBy(cols)')
 
         # check if argument is either a list, ASC or DESC and return list of args
         # else raises method argument error
         arguments = _check_and_extract_list_or_valid_typed_arguments(cols,
-                'orderBy', valid_types=(str, ASC, DESC))
+                                                                     'orderBy', valid_types=(str, ASC, DESC))
 
         # should also be done in Column types
-        ordering_cols = list(map(lambda arg: arg \
-                                 if isinstance(arg, (ASC, DESC)) \
+        ordering_cols = list(map(lambda arg: arg
+                                 if isinstance(arg, (ASC, DESC))
                                  else Column(arg),
                              arguments))
 
         clone_obj = copy.deepcopy(self)
         clone_obj._ordering_cols = ordering_cols
-        
+
         return clone_obj
-
-

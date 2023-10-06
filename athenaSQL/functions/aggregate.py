@@ -1,8 +1,8 @@
-from adflow.sql.column import Column, AggregateColumn
+from athenaSQL.column import AggregateColumn
 
-from adflow.sql.functions.functions import _create_unary_function, \
-        _create_binary_function, \
-        _create_nullnary_function
+from athenaSQL.functions.functions import _create_unary_function, \
+    _create_binary_function, \
+    _create_nullnary_function
 
 _unary_functions = {
     'any_value': 'Returns an arbitrary non-null value x, if one exists',
@@ -28,5 +28,3 @@ for _name, _doc in _unary_functions.items():
 
 for _name, _doc in _binary_functions.items():
     globals()[_name] = _create_binary_function(_name, _doc, AggregateColumn)
-
-

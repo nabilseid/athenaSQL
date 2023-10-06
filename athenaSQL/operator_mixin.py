@@ -1,12 +1,12 @@
-import copy
-
 def _exit_on_invalid_operand(other):
     """Exit if operand is not of a type int, str or Column
     """
-    from adflow.sql.column import Column
-    
+    from athenaSQL.column import Column
+
     if not isinstance(other, (int, str, Column)):
-        raise TypeError(f"Column can't be compared with {type(other).__name__}")
+        raise TypeError(
+            f"Column can't be compared with {type(other).__name__}")
+
 
 def col_boolOps(boolOps, compound=False):
     """
@@ -17,21 +17,22 @@ def col_boolOps(boolOps, compound=False):
         def wrapper(self, other):
             obj = func(self, other)
 
-            from adflow.sql.column import ConditionalColumn
+            from athenaSQL.column import ConditionalColumn
             # if operand is not ConditionalColumn and operation is boolOps
             if boolOps and compound and type(self) != ConditionalColumn:
                 raise TypeError(f"unsupported operand type(s): "
                                 f"'{type(self).__name__}' and "
                                 f"'{type(other).__name__}'")
-            
+
             if boolOps:
                 return ConditionalColumn(self)
-            
-            return obj 
+
+            return obj
 
         return wrapper
 
     return decorator
+
 
 def _bin_op(operator, r=False, compound=False, boolOps=False):
     """Create a method for given binary operation
@@ -44,16 +45,16 @@ def _bin_op(operator, r=False, compound=False, boolOps=False):
         # if operand is string enclose it in single quotes
         if isinstance(other, str):
             other = f"'{other}'"
-        
+
         # self is on the left, operand is on the right
         # sum('col') + 6
         clause = f'{self._sql_clause} {operator} {other}'
-        
+
         # self is on the right, operand is on the left
         # 6 + sum('col')
         if r:
             clause = f'{other} {operator} {self._sql_clause}'
-        
+
         # operation is compound, it needs to be enclosed with parenthesis
         # (col > 5 AND col2 = 10)
         if compound:
@@ -63,6 +64,7 @@ def _bin_op(operator, r=False, compound=False, boolOps=False):
 
         return self
     return _
+
 
 def _func_op(operator, boolOps=False):
     """
@@ -74,9 +76,9 @@ def _func_op(operator, boolOps=False):
     >>> ~(avg('col') > 5)
     NOT(AVG(col) > 5)
     """
-    
+
     def _(self):
-        from adflow.sql.column import ConditionalColumn
+        from athenaSQL.column import ConditionalColumn
         # if operand is not ConditionalColumn and operation is boolOps
         if boolOps and type(self) != ConditionalColumn:
             raise TypeError(f'unsupported operand type: {type(self).__name__}')
@@ -89,6 +91,7 @@ def _func_op(operator, boolOps=False):
 
         return self
     return _
+
 
 def _bin_func_op(operator, r=False, boolOps=False):
     """
@@ -104,7 +107,7 @@ def _bin_func_op(operator, r=False, boolOps=False):
         # r is False, self is the left operand of the binary funciton operator
         # POWER(SUM(col), 2)
         clause = f'{operator}({self._sql_clause}, {other})'
-        
+
         # self is the right operand of the binary function operation
         # POWER(2, SUM(col))
         if r:
@@ -114,6 +117,7 @@ def _bin_func_op(operator, r=False, boolOps=False):
 
         return self
     return _
+
 
 class ComparisonMixin(object):
     """
@@ -135,6 +139,7 @@ class ComparisonMixin(object):
     __gt__ = _bin_op('>', boolOps=True)
     __ge__ = _bin_op('>=', boolOps=True)
     __ne__ = _bin_op('<>', boolOps=True)
+
 
 class ArithmeticMixin(object):
     """
@@ -165,11 +170,12 @@ class ArithmeticMixin(object):
     __pow__ = _bin_func_op("POWER")
     __rpow__ = _bin_func_op("POWER", r=True)
     __abs__ = _func_op("ABS")
-    
+
     # TODO __round__
     # TODO __trunc__
     # TODO __floor__
     # TODO __ceil__
+
 
 class LogicalMixin(object):
     """
@@ -189,4 +195,4 @@ class LogicalMixin(object):
     __or__ = _bin_op("OR", compound=True, boolOps=True)
     __invert__ = _func_op("NOT", boolOps=True)
     __rand__ = _bin_op("AND", r=True, compound=True, boolOps=True)
-    __ror__ = _bin_op("OR", r=True, compound=True, boolOps=True) 
+    __ror__ = _bin_op("OR", r=True, compound=True, boolOps=True)

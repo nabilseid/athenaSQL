@@ -1,10 +1,9 @@
-from adflow.sql.column import Column, AggregateColumn
+from athenaSQL.column import Column
 
-from adflow.sql.functions.functions import _create_unary_function, \
-        _create_binary_function, \
-        _create_nullnary_function
+from athenaSQL.functions.functions import _create_unary_function, \
+    _create_binary_function
 
-from adflow.sql.queries.query_abc import _check_and_extract_list_or_valid_typed_arguments
+from athenaSQL.queries.query_abc import _check_and_extract_list_or_valid_typed_arguments
 
 _unary_functions = {
     'chr': 'Returns the Unicode code point n as a single character string.',
@@ -43,21 +42,21 @@ def concat(*cols):
     """
 
     arguments = _check_and_extract_list_or_valid_typed_arguments(cols,
-                                    'concat', valid_types=(str, Column))
+                                                                 'concat', valid_types=(str, Column))
 
     column = Column('_')
     column._sql_clause = f'CONCAT('
     for index, arg in enumerate(arguments, start=1):
         column._sql_clause += (f'\'{arg}\''
-                                   if isinstance(arg, str)
-                                   else f'{arg}')
+                               if isinstance(arg, str)
+                               else f'{arg}')
 
         if index != len(arguments):
             column._sql_clause += ', '
 
     column._sql_clause += ')'
 
-    return column 
+    return column
 
 
 def replace(col, search, replace=None):
@@ -76,7 +75,8 @@ def replace(col, search, replace=None):
     col._sql_clause = f"REPLACE({col}, '{search}'"
     col._sql_clause += f", '{replace}')" if replace else ")"
 
-    return col 
+    return col
+
 
 def substring(col, start, length=None):
     """
@@ -98,10 +98,3 @@ def substring(col, start, length=None):
     col._sql_clause += f", {length})" if length else ")"
 
     return col
-
-
-
-
-
-
-

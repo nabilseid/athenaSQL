@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from adflow.errors import PartialQueryError
-from adflow.sql.column import Column, AliasColumn 
-from adflow.core.run_athena_query import RunAthenaQuery
+from athenaSQL.errors import PartialQueryError
+from athenaSQL.column import Column, AliasColumn
+
 
 def _exit_on_uncalled_preceding_method(method_called,
                                        method_name,
@@ -26,16 +26,18 @@ def _exit_on_uncalled_preceding_method(method_called,
         raise SyntaxError(f".{method_name}() cannot be called before "
                           f".{preceding_method_name}()")
 
+
 def _exit_on_partial_query(query_attribute,
                            method_name,
                            query_name):
-
     """
     throw PartialQueryError if query_attribute satisfy nagation
     """
 
     if not query_attribute:
-        raise PartialQueryError(f"{method_name}() is not called on {query_name}")
+        raise PartialQueryError(
+            f"{method_name}() is not called on {query_name}")
+
 
 def _exit_on_override(previous_value, sql_clause, method_name):
     # exit if the previous value is not empty
@@ -46,17 +48,17 @@ def _exit_on_override(previous_value, sql_clause, method_name):
 
 
 def _check_and_extract_list_or_valid_typed_arguments(args,
-        method_name, valid_types=(str, Column, AliasColumn)):
+                                                     method_name, valid_types=(str, Column, AliasColumn)):
 
     if not isinstance(valid_types, tuple):
         valid_types = (valid_types,)
 
     try:
-        # argument is a single type, check for valid type and return 
+        # argument is a single type, check for valid type and return
         if isinstance(args, valid_types):
             return args
 
-        # argument is a list 
+        # argument is a list
         # check and return if all parameters are with in valid types
         if all(isinstance(arg, valid_types) for arg in args):
             return list(args)
@@ -65,7 +67,7 @@ def _check_and_extract_list_or_valid_typed_arguments(args,
         if len(args) == 1 and isinstance(args[0], list):
             # check all items in the list valid types
             if all(isinstance(arg, valid_types) for arg in args[0]):
-                return args[0] # return the first parameter of a type list
+                return args[0]  # return the first parameter of a type list
     except:
         # escape if there are any errors, error message is raised below
         pass
@@ -74,15 +76,17 @@ def _check_and_extract_list_or_valid_typed_arguments(args,
     raise TypeError(f".{method_name}() can only accept a list or "
                     f"[{', '.join(map(lambda t: t.__name__, valid_types))}]")
 
+
 class QueryABC(ABC):
     """
     abstract class for all query types.
     all query class should accept database name, table names and _to_sql method
     to render sql
     """
+
     def __init__(self, database, table):
-        self.database = database 
-        self.table = table 
+        self.database = database
+        self.table = table
         self.query_engine = None
 
         ABC.__init__(self)
@@ -96,16 +100,16 @@ class QueryABC(ABC):
         """
         print(self._to_sql())
 
-    def exec(self, return_type='dataframe', dry_run=False):
-        """
-        run athena query, if dry_run is true return query string
-        """
-        query = self._to_sql()
+    # TODO pkg athena and add as dependency
+    # def exec(self, return_type='dataframe', dry_run=False):
+    #     """
+    #     run athena query, if dry_run is true return query string
+    #     """
+    #     query = self._to_sql()
 
-        if dry_run:
-            return self._to_sql()
+    #     if dry_run:
+    #         return self._to_sql()
 
-        self.query_engine =  RunAthenaQuery(query=query, return_type=return_type)
+    #     self.query_engine =  RunAthenaQuery(query=query, return_type=return_type)
 
-        return self.query_engine.query_results()
-
+    #     return self.query_engine.query_results()

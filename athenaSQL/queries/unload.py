@@ -1,10 +1,10 @@
 import copy
 from jinja2 import Template
 
-from adflow.sql.queries.select import SelectQuery
-from adflow.sql.queries.query_abc import QueryABC, \
-        _exit_on_override, \
-        _exit_on_partial_query
+from athenaSQL.queries.select import SelectQuery
+from athenaSQL.queries.query_abc import QueryABC, \
+    _exit_on_override, \
+    _exit_on_partial_query
 
 unload_query_template = """
 {% macro render_type(value) -%}
@@ -40,9 +40,11 @@ WITH (
 {%- endif -%}
 """
 
+
 class UnloadQuery(QueryABC):
     """
     """
+
     def __init__(self):
         QueryABC.__init__(self, None, None)
 
@@ -59,10 +61,10 @@ class UnloadQuery(QueryABC):
             _exit_on_partial_query(att, method, 'UnloadQuery')
 
         return Template(unload_query_template).render(
-                    select_query=self._select_query,
-                    location=self._location,
-                    tbl_properties=self._tbl_properties
-                ).strip()
+            select_query=self._select_query,
+            location=self._location,
+            tbl_properties=self._tbl_properties
+        ).strip()
 
     def unload(self, select_query):
         """
@@ -83,7 +85,7 @@ class UnloadQuery(QueryABC):
         """
         _exit_on_override(self._location, 'location', 'location(loc)')
 
-        #TODO validate s3 location 
+        # TODO validate s3 location
         clone_obj = copy.deepcopy(self)
         clone_obj._location = location
 
