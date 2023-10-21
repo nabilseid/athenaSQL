@@ -4,11 +4,17 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "athenaSql"
-version = "0.1-dev1"
-authors = ["Nabil Seid"]
+version = "0.1.0.dev1"
 description = "SQL builder for AWS Athena, inspired by sparkSQL"
-readme = "README.md"
+authors = ["Nabil Seid <nabeelseid@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+packages = [{ include = "athenaSQL" }]
+include = [{ path = "tests", format = "sdist" }]
+homepage = "https://github.com/nabilseid/athenaSQL"
+repository = "https://github.com/nabilseid/athenaSQL"
+documentation = "https://github.com/nabilseid/athenaSQL/docs"
+keywords = ["packaging", "athena", "sql", "athenaSQL"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -26,5 +32,4 @@ pytest = "^7.4.2"
 pytest-cov = "^4.1.0"
 
 [project.urls]
-"Homepage" = "https://github.com/nabilseid/athenaSQL"
 "Bug Tracker" = "https://github.com/nabilseid/athenaSQL/issues"
