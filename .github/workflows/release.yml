@@ -9,6 +9,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,7 +40,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'dist/*'
-          token: ${{ secrets.GH_TOKEN }}
           draft: false
           prerelease: steps.check-version.outputs.prerelease == 'true'
 
