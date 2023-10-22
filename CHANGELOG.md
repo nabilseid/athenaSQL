@@ -1,6 +1,12 @@
 # Change Log
 
-## [v0.1.0.a2] - (Unrelease)
+## [v0.1.0.a2] - (2023-10-22)
+
+### Fix
+
+- Update module import bug in `.over()`
+
+### Doc
 
 ## [v0.1.0.a1] - (2023-10-22)
 
