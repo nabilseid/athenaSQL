@@ -125,7 +125,7 @@ class ComparisonMixin(object):
 
     Example
     -------
-    >>> From adflow.interface.function import sum
+    >>> From athenaSQL.interface.function import sum
     >>> str(sum('col'))
     SUM('col')
     >>> str(sum('col') >= 10)
@@ -147,7 +147,7 @@ class ArithmeticMixin(object):
 
     Example
     -------
-    >>> From adflow.interface.function import sum
+    >>> From athenaSQL.interface.function import sum
     >>> str(sum('col'))
     SUM('col')
     >>> str(sum('col') + 10)

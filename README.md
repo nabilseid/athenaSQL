@@ -1,6 +1,6 @@
-# adflowSQL
+# athenaSQL
 
-adflowSQL is an Adflow module to build Athena query using python language. It is inspired by sparks sql module. It borrow some sparkSQL's concept [sparkSQL](https://spark.apache.org/docs/preview/api/python/_modules/index.html).
+athenaSQL is Athena SQL query builder, inspired by sparkSQL. It borrow some sparkSQL's concept [sparkSQL](https://spark.apache.org/docs/preview/api/python/_modules/index.html).
 
 It has 4 main components: `Database & Table`, `Queries`, `Functions`, `Columns`.
 
@@ -8,7 +8,7 @@ TODO typs: `Column type`, `Order type`
 
 ## Database & Tables
 
-adflowSQL uses `Athena` class to abstracted athena databases and `AthenaTable` for athena tables. CTE temporary tables are abstracted by `TempTable`.
+athenaSQL uses `Athena` class to abstracted athena databases and `AthenaTable` for athena tables. CTE temporary tables are abstracted by `TempTable`.
 
 `AthenaTable` cannot be constracted without a database. `TempTable` on the other hand doesn't have database.
 
