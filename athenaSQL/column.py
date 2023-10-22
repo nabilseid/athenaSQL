@@ -161,7 +161,7 @@ class Column(ComparisonMixin, ArithmeticMixin, LogicalMixin):
                             '`window` columns.')
 
         # scope error
-        from adflow.sql.queries.window import WindowQuery
+        from athenaSQL.queries.window import WindowQuery
         if not isinstance(window, WindowQuery):
             raise ValueError(f'`{type(window).__name__}` is not a type '
                              f'of `WindowColumn`')
