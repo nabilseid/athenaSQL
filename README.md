@@ -1,4 +1,5 @@
 # adflowSQL
+
 adflowSQL is an Adflow module to build Athena query using python language. It is inspired by sparks sql module. It borrow some sparkSQL's concept [sparkSQL](https://spark.apache.org/docs/preview/api/python/_modules/index.html).
 
 It has 4 main components: `Database & Table`, `Queries`, `Functions`, `Columns`.
@@ -6,19 +7,21 @@ It has 4 main components: `Database & Table`, `Queries`, `Functions`, `Columns`.
 TODO typs: `Column type`, `Order type`
 
 ## Database & Tables
+
 adflowSQL uses `Athena` class to abstracted athena databases and `AthenaTable` for athena tables. CTE temporary tables are abstracted by `TempTable`.
 
 `AthenaTable` cannot be constracted without a database. `TempTable` on the other hand doesn't have database.
 
-> All queries are performed on  `AthenaTable` instance.
+> All queries are performed on `AthenaTable` instance.
 >
 > Only `SELECT` query is availabile for CTE table. To use CTE with other queries pass it as a select query argument.
 
 **Using AthenaTable**
-```python
-from adflow.sql import Athena, AthenaTable, TempTable
 
-# creating athena table instance from database 
+```python
+from athenaSQL import Athena, AthenaTable, TempTable
+
+# creating athena table instance from database
 table = Athena('db_name').table('table_name')
 
 # creating athena table instance directly
@@ -28,13 +31,16 @@ table = AthenaTable('db_name', 'table_name')
 temp_table = TempTable('temp_tbl_name')
 ```
 
-## Queries 
+## Queries
+
 All queries need either `AthenaTable` or `TempTable` to execute. Query instance has `show_query()` that let's you preview the sql query constracted and `exec()` to execute constracted query on Athena, `exec()` returns a dataframe.
 
 Supported queries: `SELECT`, `INSERT INTO`, `CREATE`, `CREATE AS`, `CTE`, `UNLOAD`, `WINDOW`
 
 ### SELECT Query
+
 **Synopsis**
+
 ```
 table.select([column, ...])
     [.filter(condition [,...])]
@@ -51,8 +57,9 @@ If no column is provided all columns will selected. `.filter()`, `.filterGroup()
 A column can be represent by a string. To perform arithmetic, comparison and logical operation on a column, a Column type must be use. To read more on column refer to Column section
 
 **Creating a column instance**
+
 ```python
-import adflow.sql.functions as F
+import athenaSQL.functions as F
 
 # create a new column instance. we can use F.col or F.column
 col = F.col('col_name')
@@ -62,17 +69,18 @@ col2 = F.column('col_2')
 col_multi = col * 10
 col_compare = col >= 10
 col_logical = (col >= 10 and col2 <= 15)
-``` 
+```
+
 **SELECT chain method conditions**
 
-* `.filterGroup()` can only be applied to grouped select query.
-* If no column is provided on a grouped selecte query only grouping columns will be selected.
-* In grouped select query non-grouping columns must be aggregated.
-* Aggregating already selected column will replace it unless once of them is aliased.
-* Alternative to using `.agg()` is to directly add aggregated columns to `.select()`.
-
+- `.filterGroup()` can only be applied to grouped select query.
+- If no column is provided on a grouped selecte query only grouping columns will be selected.
+- In grouped select query non-grouping columns must be aggregated.
+- Aggregating already selected column will replace it unless once of them is aliased.
+- Alternative to using `.agg()` is to directly add aggregated columns to `.select()`.
 
 **Using SELECT**
+
 ```python
 # let's use the table instance from `AthenaTable` example
 table.select().show_query()
@@ -82,8 +90,8 @@ table.select().show_query()
 # FROM "db_name"."table_name"
 
 
-import adflow.sql.functions as F
-from adflow.sql.orders import ASC, DESC
+import athenaSQL.functions as F
+from athenaSQL.orders import ASC, DESC
 
 select_salary = (table.select('city', 'country')
                     .filter(F.col('age') > 10)
@@ -117,7 +125,9 @@ select_salary.show_query()
 ```
 
 ## INSERT INTO Query
+
 **Synopsis**
+
 ```
 table.insert(select_query)
     [.column_order(column, [,...])]
@@ -125,13 +135,14 @@ table.insert(select_query)
 
 Insert query accepts a select query instance to insert selected dataset into a table.
 
-`.column_order()` is an optional method to specify and order what column from the dataset to insert. 
+`.column_order()` is an optional method to specify and order what column from the dataset to insert.
 
 **Using INSERT INTO**
+
 ```python
 # the select_salary select query is used as a dataset from above
 
-# constract salary table from employee_db database 
+# constract salary table from employee_db database
 salary_table = Athena('employee_db').table('salary')
 
 # constract insert salary dataset query
@@ -189,6 +200,7 @@ insert_salary_query_ordered.show_query()
 ## CREATE Query
 
 **Synopsis**
+
 ```
 table.create()
     [.ifNotExists(bool)]
@@ -198,7 +210,7 @@ table.create()
     [.location(location)]
     [.row_format(row_format)]
     [.stored_as(file_format)]
-    [.stored_as_io(input_format, output_format)] 
+    [.stored_as_io(input_format, output_format)]
     [.serde_properties({"property":"value" [,...]})]
     [.tbl_properties({"property":"value" [,...]})]
     [.exec()]
@@ -210,14 +222,15 @@ The column type passed when creating a table is special type of column( `NewColu
 
 `row_format()` only supports SERDE. ROW FORMAT DELIMITED is not supported. Since DELIMITED is not supported properties have to be specified through `serde_properties()`. [More ref](https://docs.aws.amazon.com/athena/latest/ug/serde-about.html)
 
-`stored_as_io()` is an alternative for `stored_as()` that accept input and output format. Both methods cannot be called on a single instance simultaneously. `stored_as()` accept single row format. These row formats can be imported from `adflow.sql.column_type.COLUMNTYPE`. Supported row formats: SEQUENCEFILE, TEXTFILE, RCFILE, ORC, PARQUET, AVRO, ION. By default TEXTFILE is selected.
+`stored_as_io()` is an alternative for `stored_as()` that accept input and output format. Both methods cannot be called on a single instance simultaneously. `stored_as()` accept single row format. These row formats can be imported from `athenaSQL.column_type.COLUMNTYPE`. Supported row formats: SEQUENCEFILE, TEXTFILE, RCFILE, ORC, PARQUET, AVRO, ION. By default TEXTFILE is selected.
 
 **Using CREATE**
-```python
-from adflow.sql.functions import F
-from adflow.sql.column_type import COLUMNTYPE
 
-# create abstract representation of the table 
+```python
+from athenaSQL.functions import F
+from athenaSQL.column_type import COLUMNTYPE
+
+# create abstract representation of the table
 new_table = AthenaTable(database='db_name', table='new_table')
 
 create_table_query = (new_table.create()
@@ -250,7 +263,7 @@ create_table_query.show_query()
 #     'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat'
 # OUTPUTFORMAT
 #     'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
-# 
+#
 # LOCATION 's3://S3-bucket-location/'
 # TBLPROPERTIES (
 #     "bucketing_format"="spark",
@@ -258,9 +271,10 @@ create_table_query.show_query()
 # )
 ```
 
-## CREATE AS Query 
+## CREATE AS Query
 
 **Synopsis**
+
 ```
 table.createAs(select_query)
     [.withData(bool)]
@@ -270,6 +284,7 @@ table.createAs(select_query)
 Create a table from a dataset that is a result of a select query. You can use `.withTblProps()` to specify table properties. [CREATE AS Doc](https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html)
 
 **Using CREATE AS**
+
 ```python
 # let's use select_salary query from SELECT query section
 
@@ -308,9 +323,10 @@ create_salary_table.show_query()
 # ORDER BY salary_avg DESC
 ```
 
-## CTE Query 
+## CTE Query
 
 **Synopsis**
+
 ```
 withTable(cte_name, select_query)
     [.withTable(cte_name, (table|temp)select_query) [,...]]
@@ -332,10 +348,11 @@ Temporary tables are created using `.withTable()` method, it accept name for tem
 CTE is a type of select query thus it should be finished with a select statment. After creating the temporary tables a table name should be selected for the final select statement. Selecting a table name returns an abstract table for the selected table name with only `.select()` query capability.
 
 **Using CTE**
+
 ```python
-from adflow.sql import TempTable
-from adflow.sql.queries import withTable
-from adflow.sql.functions import col 
+from athenaSQL import TempTable
+from athenaSQL.queries import withTable
+from athenaSQL.functions import col
 
 table_demo = AthenaTable(database='db_name', table='demo')
 select_demo = table_demo.select('demo_id', 'demo_name', 'demo_addr')
@@ -371,9 +388,10 @@ cta_query.show_query()
 # FROM "demo_in_addis"
 ```
 
-## UNLOAD Query 
+## UNLOAD Query
 
 **Synopsis**
+
 ```
 unload(select_query)
     .location(location)
@@ -383,10 +401,11 @@ unload(select_query)
 `UNLOAD` lets you dump a select query result to specified location. This query is not directly callable on table instance, it is a wrapper query for `SELECT` query. [Doc](https://docs.aws.amazon.com/athena/latest/ug/unload.html)
 
 **Using UNLOAD**
-```python
-from adflow.sql.queries import unload 
 
-# we can use the cta_query as an input 
+```python
+from athenaSQL.queries import unload
+
+# we can use the cta_query as an input
 unload_query = (unload(cta_query)
                     .location('s3://S3-bucket-name/sub-location/')
                     .withTblProps({"format":"PARQUET", "compression":"gzip"}))
@@ -420,13 +439,14 @@ unload_query.show_query()
 #     )
 ```
 
-## WINDOW Query 
+## WINDOW Query
 
 **Synopsis**
+
 ```
 window_function([operand, [offset, [default]]])
     .over(
-        Window 
+        Window
             .partitionBy(column, [,...])
             [.orderBy(Column, [,...])]
     )
@@ -437,11 +457,11 @@ Window functions are imported and called as a python function. The `over` clause
 
 `NTILE(4) OVER (PARTITION BY campaignId ORDER BY flight) AS quartile`
 
-`NTILE` is the function everything after the `OVER` clause is Window query. 
+`NTILE` is the function everything after the `OVER` clause is Window query.
 
 ```python
-from adflow.sql.queries.window import Window
-from adflow.sql.functions.window import ntile 
+from athenaSQL.queries.window import Window
+from athenaSQL.functions.window import ntile
 
 window_col = ntile(4).over(
                 Window
@@ -451,16 +471,17 @@ window_col = ntile(4).over(
 
 print(window_col._sql_clause)
 
-# NTILE(4) OVER (PARTITION BY campaignId ORDER BY flight) AS quartile 
+# NTILE(4) OVER (PARTITION BY campaignId ORDER BY flight) AS quartile
 ```
 
 **Using WINDOW**
-```python 
-from adflow.sql.queries.window import Window
-from adflow.sql.functions.window import row_number
-import adflow.sql.functions AS F
 
-# lets use salary table 
+```python
+from athenaSQL.queries.window import Window
+from athenaSQL.functions.window import row_number
+import athenaSQL.functions AS F
+
+# lets use salary table
 sum_window = Window.partitionBy('city', 'country').orderBy('salary_avg')
 row_window = Window.orderBy('salary_avg')
 
@@ -486,20 +507,21 @@ select_win_query.show_query()
 
 ## Columns
 
-Column type is used to represent a single column. It is constracted just by passing the column name as an argument. Column type are needed to support python built-in operation, to identify what type of column has passed and to constract column level queries like window functions and aliasing. 
+Column type is used to represent a single column. It is constracted just by passing the column name as an argument. Column type are needed to support python built-in operation, to identify what type of column has passed and to constract column level queries like window functions and aliasing.
 
-There are different kinds of columns. We are only gonna use two of them. There rest are constracted behind the scene. A plane column and new column. 
+There are different kinds of columns. We are only gonna use two of them. There rest are constracted behind the scene. A plane column and new column.
 
-Plane column is a column type with only a column name, we need this when we want to do comparison, arithmetic and logical operations on a column otherwise we can use the column name instead. We can use either `col()` or `column()` functions to create plane column. 
+Plane column is a column type with only a column name, we need this when we want to do comparison, arithmetic and logical operations on a column otherwise we can use the column name instead. We can use either `col()` or `column()` functions to create plane column.
 
 **Using `col()`**
-```python
-import adflow.sql.functions as F
 
-salary_table.select('city',                    # using column name 
-                    F.col('country'),          # using col() 
-                    F.max('salary_avg'),       # passing column name to function 
-                    F.max(F.col('salary_avg')) # passing column to function 
+```python
+import athenaSQL.functions as F
+
+salary_table.select('city',                    # using column name
+                    F.col('country'),          # using col()
+                    F.max('salary_avg'),       # passing column name to function
+                    F.max(F.col('salary_avg')) # passing column to function
                     ).show_query()
 
 # SELECT
@@ -512,7 +534,7 @@ salary_table.select('city',                    # using column name
 
 New column is used when creating an EXTERNAL table. It requires both column name and data type to create new column. We can use `nCol()` function to create new column.
 
-Data types are imported from `adflow.sql.column_type`. Supported data types are
+Data types are imported from `athenaSQL.column_type`. Supported data types are
 
 - `boolean`
 - `tinyint`
@@ -532,9 +554,10 @@ Data types are imported from `adflow.sql.column_type`. Supported data types are
 [More reference](https://docs.aws.amazon.com/athena/latest/ug/create-table.html)
 
 **Using `nCol()`**
-```python 
-import adflow.sql.functions as F
-from adflow.sql.column_type import COLUMNTYPE
+
+```python
+import athenaSQL.functions as F
+from athenaSQL.column_type import COLUMNTYPE
 
 product_table = AthenaTable(database='product_db', table='product')
 
@@ -553,11 +576,12 @@ product_table = AthenaTable(database='product_db', table='product')
 # )
 ```
 
-### Comparison, Arithmetic and Logical operations on a column 
+### Comparison, Arithmetic and Logical operations on a column
 
-comparison, arithmetic and logical operations can be done using python's built-in operators on a column wrapped with a column type. 
+comparison, arithmetic and logical operations can be done using python's built-in operators on a column wrapped with a column type.
 
-Supported operations 
+Supported operations
+
 - Comparison: `<`, `<=`, `=`, `>`, `>=`, `!=`
 - Arithmetic: `+`, `-`, `*`, `/`, `%`, `pow()`, `abs()`
 - Logical: `&`, `|`, `~`
@@ -567,6 +591,7 @@ All logical operations should be enclosed by parenthesis. Parenthesis has a high
 Reverese operation is supported on all comparison, all arithmetic except `abs()` and all logical except `~`.
 
 **Using column operations**
+
 ```python
 ### Comparison ###
 
@@ -578,7 +603,7 @@ print(50 < F.max('age')) # reverse '<'
 
 # age >= 10
 # lang <> 'python'
-# MAX(age) < 50 
+# MAX(age) < 50
 # MAX(age) > 50 -- reverse '<'
 
 
@@ -610,20 +635,20 @@ print(((F.col('age') > 10) & (F.col('age') < 20)) | ~(F.col('is_infant') == True
 # ((age > 10 AND age < 20) OR NOT(is_infant = True))
 ```
 
-In addition to the column types mentioned there are other types which are used to identify different columns. 
+In addition to the column types mentioned there are other types which are used to identify different columns.
 
-- `CaseColumn`: return type from a case function 
-- `AliasColumn`: an aliased column 
-- `WindowColumn`: a column with window function 
-- `AggregateColumn`: a column wrapped with an aggregation function 
-- `FunctionalColumn`: a column wrapped with a function 
-- `ConditionalColumn`: column with a logical operation 
+- `CaseColumn`: return type from a case function
+- `AliasColumn`: an aliased column
+- `WindowColumn`: a column with window function
+- `AggregateColumn`: a column wrapped with an aggregation function
+- `FunctionalColumn`: a column wrapped with a function
+- `ConditionalColumn`: column with a logical operation
 
-## Functions 
+## Functions
 
 Functions are performed on columns. You can get more references [here](https://trino.io/docs/current/functions.html).
 
-Aggregating functions should be used on non grouping cols if query is grouped. Aggregating functions can also be used in place of window functions. 
+Aggregating functions should be used on non grouping cols if query is grouped. Aggregating functions can also be used in place of window functions.
 
 `sqrt(col)`: Computes the square root of the specified float value.
 
@@ -691,7 +716,7 @@ Aggregating functions should be used on non grouping cols if query is grouped. A
 
 `lag(x, [offset, [default_value]])`: Returns the value at offset rows before the current row in the window partition.
 
-### String Functions 
+### String Functions
 
 `chr(col)`: Returns the Unicode code point n as a single character string.
 
@@ -721,7 +746,7 @@ Aggregating functions should be used on non grouping cols if query is grouped. A
 
 `from_utf8(col)`: Decodes a UTF-8 encoded string from binary. Invalid UTF-8 sequences are replaced with the Unicode replacement character U+FFFD.
 
-### Date and Time Functions 
+### Date and Time Functions
 
 `date(col)`: This is an alias for CAST(x AS date).
 
@@ -729,7 +754,7 @@ Aggregating functions should be used on non grouping cols if query is grouped. A
 
 `from_iso8601_timestamp(col)`: Parses the ISO 8601 formatted string into a timestamp with time zone.
 
-### Date and Time Convenience Extraction Functions 
+### Date and Time Convenience Extraction Functions
 
 `day(col)`: Returns the day of the month from x.
 
@@ -767,11 +792,11 @@ Aggregating functions should be used on non grouping cols if query is grouped. A
 
 `year_of_week(col)`: Returns the year of the ISO week from x.
 
-`yow(col)`: This is an alias for year_of_week(). 
+`yow(col)`: This is an alias for year_of_week().
 
 ### URL Functions
 
-*[protocol:][//host[:port]][path][?query][#fragment]*
+_[protocol:]//host[:port]][path][?query][#fragment]_
 
 `url_extract_fragment(col)`: Returns the fragment identifier from url.
 
@@ -785,7 +810,7 @@ Aggregating functions should be used on non grouping cols if query is grouped. A
 
 `url_extract_query(col)`: Returns the query string from url.
 
-`url_encode(col)`: 
+`url_encode(col)`:
 
 `url_decode(col)`: Unescapes the URL encoded value. This function is the inverse of url_encode().
 

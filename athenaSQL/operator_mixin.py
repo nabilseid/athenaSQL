@@ -72,7 +72,7 @@ def _func_op(operator, boolOps=False):
 
     Example
     -------
-    >>> from adflow.sql.function import avg
+    >>> from athenaSQL.function import avg
     >>> ~(avg('col') > 5)
     NOT(AVG(col) > 5)
     """
@@ -183,7 +183,7 @@ class LogicalMixin(object):
 
     Example
     -------
-    >>> FROM adflow.sql.function import sum, avg
+    >>> FROM athenaSQL.function import sum, avg
     >>> str(sum('col'))
     SUM('col')
     >>> str(sum('col') == 10 AND avg('col2') == 5)

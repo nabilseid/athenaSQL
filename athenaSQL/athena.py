@@ -13,7 +13,7 @@ class Athena:
 
     Example
     -------
-    >>> from adflow.sql.athena import Athena
+    >>> from athenaSQL.athena import Athena
     >>> cpe_table = Athena('adhouse').table('cpe') # abstraction table class for cpe
     >>> cpe_df = Athena.sql('SELECT * FROM adhouse.cpe') # cpe data in pandas df
     """
