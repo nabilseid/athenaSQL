@@ -13,10 +13,10 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v3
         with:
           python-version: '3.9'
 
@@ -38,9 +38,10 @@ jobs:
 
       - name: Create Release
         uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           artifacts: 'dist/*'
-          token: ${{ secrets.GH_TOKEN }}
           draft: false
           prerelease: steps.check-version.outputs.prerelease == 'true'
 
