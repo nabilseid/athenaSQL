@@ -9,6 +9,7 @@ def _exit_on_uncalled_preceding_method(method_called,
                                        preceding_method_name):
     """
     throw exception if preceding method is not called.
+    
     params
     ------
     method_called: any

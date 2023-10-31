@@ -16,6 +16,11 @@ athenaSQL
    :hidden:
 
    quickstart
+   concept/index
+   concept/databases_and_tables
+   concept/columns
+   concept/queries/index
+   concept/functions/index
 
 .. toctree::
    :maxdepth: 1
@@ -24,4 +29,3 @@ athenaSQL
 
    changelog
    license
-   athenaSQL
