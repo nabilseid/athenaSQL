@@ -3,8 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-athenaSQL documentation!
-========================
+athenaSQL
+=========
+
+.. include:: ../README.md
+   :start-after: <!-- start intro -->
+   :end-before: <!-- end intro -->
+   :parser: myst_parser.sphinx_
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   quickstart
 
 .. toctree::
    :maxdepth: 1
