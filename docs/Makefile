@@ -3,8 +3,9 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?=
+SPHINXOPTS    ?= -nWT --keep-going #-vvv
 SPHINXBUILD   ?= sphinx-build
+SPHINXPROJ    = athenaSQL
 SOURCEDIR     = .
 BUILDDIR      = _build
 
@@ -18,3 +19,5 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+# sphinx-build -nW --keep-going -b html docs/ docs/_build/html
