@@ -29,6 +29,7 @@ source_suffix = {
 
 nb_execution_mode = 'off'
 
+
 autoapi_dirs = ["../athenaSQL"]  # location to parse for API reference
 
 templates_path = ['_templates']

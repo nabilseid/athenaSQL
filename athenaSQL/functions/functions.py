@@ -140,7 +140,7 @@ _unary_functions = {
     'url_decode': 'Unescapes the URL encoded value. This function is the '
                   'inverse of url_encode().',
     # UUID Functions
-    'uuid()': 'Returns a pseudo randomly generated UUID (type 4).',
+    'uuid': 'Returns a pseudo randomly generated UUID (type 4).',
 
 }
 

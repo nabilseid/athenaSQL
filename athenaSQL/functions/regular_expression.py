@@ -1,7 +1,7 @@
 from athenaSQL.column import ConditionalColumn
 
 from athenaSQL.functions.functions import _create_binary_function
-    
+
 
 _binary_functions = {
     'regexp_count': 'Returns the number of occurrence of pattern in string.',
