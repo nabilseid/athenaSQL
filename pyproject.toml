@@ -30,6 +30,11 @@ jinja2 = "^3.1.2"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
 pytest-cov = "^4.1.0"
+jupyter = "^1.0.0"
+myst-nb = {version = "1.0.0rc0", python = "^3.9"}
+furo = {version = "^2023.9.10", python = "^3.9"}
+sphinx-autoapi = {version = "^3.0.0", python = "^3.9"}
+sphinxcontrib-napoleon = "^0.7"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/nabilseid/athenaSQL/issues"
