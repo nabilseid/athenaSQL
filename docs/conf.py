@@ -45,7 +45,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # Look at the first line of the docstring for function and method signatures.
 autodoc_docstring_signature = True
-autosummary_generate = False
+autosummary_generate = True
 
 # --- Code block styling ---
 
