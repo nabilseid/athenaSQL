@@ -12,4 +12,5 @@ API Reference
     
     athenasql.athena
     athenasql.column
-    athenasql.queries/index
+    athenasql.queries
+    athenasql.functions
