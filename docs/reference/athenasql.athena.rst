@@ -46,5 +46,5 @@ Temp Table APIs
 .. autosummary::
    :toctree: api/
 
-   AthenaTable.select
+   TempTable.select
    

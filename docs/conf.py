@@ -37,15 +37,19 @@ nb_execution_mode = 'off'
 
 numpydoc_show_class_members = False
 
+# Look at the first line of the docstring for function and method signatures.
+autodoc_docstring_signature = True
+autosummary_generate = True
+
+autodoc_default_options = {
+    'inherited-members': False
+}
+
 # autoapi_add_toctree_entry = False
 # autoapi_dirs = ["../athenaSQL"]  # location to parse for API reference
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
-# Look at the first line of the docstring for function and method signatures.
-autodoc_docstring_signature = True
-autosummary_generate = True
 
 # --- Code block styling ---
 
