@@ -202,3 +202,13 @@ def try_cast(col, _type):
         raise TypeError('col argument in try_cast() should be a Column')
 
     return col.cast(_type, _try=True)
+
+
+# Ensure that Sphinx finds the dynamically created functions
+__all__ = [
+    *_unary_functions.keys(),
+    *_binary_functions.keys(),
+    'nCol',
+    'when',
+    'cast',
+    'try_cast']
