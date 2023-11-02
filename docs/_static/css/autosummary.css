@@ -1,8 +1,30 @@
 table.autosummary {
     border: none;
     border-collapse: collapse;
+    display: block !important;
+    overflow: auto;
+    box-shadow: none !important;
 }
 
 table.autosummary td {
     border: none;
+    padding: 6px;
+}
+
+/* autosummary table full-width */
+table.autosummary tbody {
+    display: block !important;
+}
+
+table.autosummary tr {
+    display: flex !important;
+}
+
+/* autosummary td width ratio */
+table.autosummary td:nth-child(1) {
+    width: 45%;
+}
+
+table.autosummary td:nth-child(2) {
+    width: 55%;
 }

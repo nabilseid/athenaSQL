@@ -62,5 +62,6 @@ html_favicon = '_static/favicon.ico'
 html_static_path = ['_static']
 
 html_css_files = [
-    'css/autosummary.css',
+    'css/athenasql.css',
+    'css/autosummary.css'
 ]
