@@ -59,6 +59,7 @@ tmtagsHistory
 # _build #
 ###############
 _build
+docs/reference/**/api/
 
 .ipynb_checkpoints
 .env
