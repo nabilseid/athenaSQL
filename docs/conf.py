@@ -6,6 +6,11 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath('../athenaSQL'))
+
 project = 'athenaSQL'
 copyright = '2023, Nabil Seid'
 author = 'Nabil Seid'
@@ -16,9 +21,10 @@ release = '0.1.0.a2'
 
 extensions = [
     'myst_nb',
-    "autoapi.extension",
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
     "sphinx.ext.napoleon",
-    "sphinx.ext.viewcode"
+    'sphinx.ext.autosummary'
 ]
 
 source_suffix = {
@@ -29,14 +35,24 @@ source_suffix = {
 
 nb_execution_mode = 'off'
 
+numpydoc_show_class_members = False
 
-autoapi_dirs = ["../athenaSQL"]  # location to parse for API reference
+# autoapi_add_toctree_entry = False
+# autoapi_dirs = ["../athenaSQL"]  # location to parse for API reference
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+# Look at the first line of the docstring for function and method signatures.
+autodoc_docstring_signature = True
+autosummary_generate = True
 
-# -- Options for HTML output -------------------------------------------------
+# --- Code block styling ---
+
+pygments_style = "sphinx"
+pygments_dark_style = "monokai"
+
+# --- Options for HTML output ---
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'furo'
@@ -44,3 +60,7 @@ html_title = "athenaSQL"
 html_favicon = '_static/favicon.ico'
 
 html_static_path = ['_static']
+
+html_css_files = [
+    'css/autosummary.css',
+]

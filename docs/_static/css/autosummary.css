@@ -1,0 +1,8 @@
+table.autosummary {
+    border: none;
+    border-collapse: collapse;
+}
+
+table.autosummary td {
+    border: none;
+}

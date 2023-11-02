@@ -29,3 +29,14 @@ athenaSQL
 
    changelog
    license
+
+.. autoclass:: column.Column
+   :members:
+
+.. currentmodule:: athenaSQL
+
+.. autosummary::
+   :toctree: api/
+
+   Column
+   Column.alias
