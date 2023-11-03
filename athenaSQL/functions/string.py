@@ -98,3 +98,13 @@ def substring(col, start, length=None):
     col._sql_clause += f", {length})" if length else ")"
 
     return col
+
+
+# Ensure that Sphinx finds the dynamically created functions
+__all__ = [
+    *_unary_functions.keys(),
+    *_binary_functions.keys(),
+    'concat',
+    'replace',
+    'substring'
+]

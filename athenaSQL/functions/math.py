@@ -31,3 +31,11 @@ def round(col, d=None):
     col._sql_clause += f", {d})" if d else ")"
 
     return col
+
+
+# Ensure that Sphinx finds the dynamically created functions
+__all__ = [
+    *_unary_functions.keys(),
+    *_binary_functions.keys(),
+    'round'
+]

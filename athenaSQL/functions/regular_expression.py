@@ -25,3 +25,9 @@ for _name, _doc in _conditioal_binary_functions.items():
     globals()[_name] = _create_binary_function(_name,
                                                _doc,
                                                func_type=ConditionalColumn)
+
+# Ensure that Sphinx finds the dynamically created functions
+__all__ = [
+    *_binary_functions.keys(),
+    *_conditioal_binary_functions.keys()
+]

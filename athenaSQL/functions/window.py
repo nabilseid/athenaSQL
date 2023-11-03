@@ -84,3 +84,15 @@ def lag(x, offset, default_value):
     wCol = WindowColumn('lag', x, *optional_args)
 
     return wCol
+
+
+# Ensure that Sphinx finds the dynamically created functions
+__all__ = [
+    *_window_functions.keys(),
+    'ntile',
+    'first_value',
+    'last_value',
+    'nth_value',
+    'lead',
+    'lag'
+]
