@@ -9,5 +9,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: s
+        run: |
+          export PYTHONPATH="${pwd}:$PYTHONPATH"
+          export PYTHONPATH="${pwd}/athenaSQL:$PYTHONPATH"
+          
       - name: Set up Python 3.9
-        run: ls
+        run: python -c "import sys
+          print(sys.path)"
