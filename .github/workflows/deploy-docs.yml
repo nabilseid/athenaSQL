@@ -14,12 +14,8 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python - -y
-
       - name: Install dependencies
-        run: poetry install
+        run: pip install -r requirements-docs.in
 
       - name: Build Docs
         run: |

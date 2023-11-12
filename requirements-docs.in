@@ -1,0 +1,8 @@
+jinja2==3.1.2
+pytest==7.4.2
+pytest-cov==4.1.0
+jupyter==1.0.0
+myst-nb==1.0.0rc0
+furo==2023.9.10
+sphinx-autoapi==3.0.0
+sphinxcontrib-napoleon==0.7
