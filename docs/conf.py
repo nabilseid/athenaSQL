@@ -9,12 +9,15 @@
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath('../athenaSQL'))
+import sphinx
+
+# sys.path.insert(0, os.path.abspath('../athenaSQL'))
 
 project = 'athenaSQL'
 copyright = '2023, Nabil Seid'
 author = 'Nabil Seid'
-release = '0.1.0.a2'
+version = sphinx.__display_version__
+release = version
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
