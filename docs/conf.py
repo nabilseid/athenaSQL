@@ -64,7 +64,7 @@ pygments_dark_style = "monokai"
 
 html_theme = 'furo'
 html_title = "athenaSQL"
-html_favicon = '_static/favicon.ico'
+html_favicon = 'http://athenasql.10birr.ninja/_static/favicon.ico'
 
 html_static_path = ['_static']
 
