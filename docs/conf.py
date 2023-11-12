@@ -11,7 +11,7 @@ import os
 
 import sphinx
 
-# sys.path.insert(0, os.path.abspath('../athenaSQL'))
+sys.path.insert(0, os.path.abspath('../athenaSQL'))
 
 project = 'athenaSQL'
 copyright = '2023, Nabil Seid'

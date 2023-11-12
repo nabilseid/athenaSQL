@@ -19,10 +19,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-docs.in
 
-      - name: Add package path to PYTHONPATH
-        run: |
-          export PYTHONPATH="${pwd}:$PYTHONPATH"
-          export PYTHONPATH="${pwd}/athenaSQL:$PYTHONPATH"
+      # - name: Add package path to PYTHONPATH
+      #   run: |
+      #     export PYTHONPATH="${pwd}:$PYTHONPATH"
+      #     export PYTHONPATH="${pwd}/athenaSQL:$PYTHONPATH"
           
       - name: Build Docs
         run: |
