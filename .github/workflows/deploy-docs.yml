@@ -9,11 +9,40 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: s
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-docs.in
+
+      - name: Add package path to PYTHONPATH
         run: |
           export PYTHONPATH="${pwd}:$PYTHONPATH"
           export PYTHONPATH="${pwd}/athenaSQL:$PYTHONPATH"
           
-      - name: Set up Python 3.9
-        run: python -c "import sys
-          print(sys.path)"
+      - name: Build Docs
+        run: |
+          cd docs
+          make dirhtml
+
+      - name: Set up AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MACHINE_USER }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MACHINE_USER }}
+          aws-region: eu-west-1
+
+      - name: Delete previous docs
+        run: aws s3 rm s3://athenasql.10birr.ninja/ --recursive
+
+      - name: Upload to S3
+        run: aws s3 cp _build/dirhtml/ s3://athenasql.10birr.ninja --recursive
