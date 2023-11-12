@@ -13,15 +13,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python - -y
       
-      - name: Install athenaSQL
-        run: |
-          rm poetry.lock
-          poetry install
+      - name: Install dependencies
+        run:
+          python -m pip install --upgrade pip
+          pip install -r requirements-docs.in
+      
+      - name: Instasll athenaSQL
+        run: pip install -e .
       
       - name: Build Docs
         run: |
