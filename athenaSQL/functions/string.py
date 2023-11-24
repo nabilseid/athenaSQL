@@ -94,7 +94,7 @@ def replace(col, search, replace=None):
     # TODO type check search and replace
 
     col._sql_clause = f"REPLACE({col}, '{search}'"
-    col._sql_clause += f", '{replace}')" if replace else ")"
+    col._sql_clause += f", '{replace}')" if replace!=None else ")"
 
     return col
 
