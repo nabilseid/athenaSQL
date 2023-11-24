@@ -37,6 +37,27 @@ for _name, _doc in _binary_functions.items():
     globals()[_name] = _create_binary_function(_name, _doc)
 
 
+def coalesce(*cols):
+    """
+    """
+
+    arguments = _check_and_extract_list_or_valid_typed_arguments(cols,
+                                                                 'coalesce', valid_types=(str, Column))
+    
+    column = Column('_')
+    column._sql_clause = f'COALESCE(' 
+    for index, arg in enumerate(arguments, start=1):
+        column._sql_clause += (f'\'{arg}\''
+                               if isinstance(arg, str)
+                               else f'{arg}')
+
+        if index != len(arguments):
+            column._sql_clause += ', '
+
+    column._sql_clause += ')'
+
+    return column
+    
 def concat(*cols):
     """
     """
@@ -104,6 +125,7 @@ def substring(col, start, length=None):
 __all__ = [
     *_unary_functions.keys(),
     *_binary_functions.keys(),
+    'coalesce',
     'concat',
     'replace',
     'substring'

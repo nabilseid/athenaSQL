@@ -208,6 +208,8 @@ def try_cast(col, _type):
 __all__ = [
     *_unary_functions.keys(),
     *_binary_functions.keys(),
+    'col',
+    'column',
     'nCol',
     'when',
     'cast',
