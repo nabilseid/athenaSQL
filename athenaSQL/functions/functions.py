@@ -101,33 +101,6 @@ _unary_functions = {
     # opt argument
     'from_utf8': 'Decodes a UTF-8 encoded string from binary. Invalid UTF-8 '
                  'sequences are replaced with the Unicode replacement character U+FFFD.',
-    # Date and Time Functions
-    'date': 'This is an alias for CAST(x AS date).',
-    'last_day_of_month': 'Returns the last day of the month.',
-    'from_iso8601_timestamp': 'Parses the ISO 8601 formatted string into a '
-                              'timestamp with time zone.',
-    # Date and Time Convenience Extraction Functions
-    'day': 'Returns the day of the month from x.',
-    'day_of_month': 'This is an alias for day().',
-    'day_of_week': 'Returns the ISO day of the week from x. The value ranges '
-                   'from 1 (Monday) to 7 (Sunday).',
-    'day_of_year': 'Returns the day of the year from x. The value ranges from 1 to 366.',
-    'dow': 'This is an alias for day_of_week().',
-    'doy': 'This is an alias for day_of_year().',
-    'hour': 'Returns the hour of the day from x. The value ranges from 0 to 23.',
-    'millisecond': 'Returns the millisecond of the second from x.',
-    'minute': 'Returns the minute of the hour from x.',
-    'month': 'Returns the month of the year from x.',
-    'quarter': 'Returns the quarter of the year from x. The value ranges from '
-               '1 to 4.',
-    'second': 'Returns the second of the minute from x.',
-    'timezone_hour': 'Returns the hour of the time zone offset from timestamp.',
-    'timezone_minute': 'Returns the minute of the time zone offset from timestamp.',
-    'week': 'Returns the ISO week of the year from x. The value ranges from 1 to 53.',
-    'week_of_year': 'This is an alias for week().',
-    'year': 'Returns the year from x.',
-    'year_of_week': 'Returns the year of the ISO week from x.',
-    'yow': 'This is an alias for year_of_week().',
     # URL Functions
     # [protocol:][//host[:port]][path][?query][#fragment]
     'url_extract_fragment': 'Returns the fragment identifier from url.',
