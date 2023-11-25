@@ -12,7 +12,7 @@ def validate_column_name(column):
     """
 
     # column contains special characters other than underscore
-    if not re.match(r'^[A-Za-z0-9_]+$', column):
+    if not re.match(r'^[A-Za-z0-9_*]+$', column):
         raise ValueError(
             f'{column} is not a valid column name. '
             'Only alphanumeric & underscore (_) are supported.')
