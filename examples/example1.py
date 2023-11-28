@@ -203,5 +203,13 @@ aggregated_data = TempTable('cleaned_unknown').select(
 # get col from table ***
 # changelog
 # release
-aggregated_data.show_query()
 
+cta_query = (withTable('cleaned_data', cleaned_data)
+                .withTable('cleaned_unknown', cleaned_unknown)
+                .withTable('aggregated_data', aggregated_data)
+                .table('aggregated_data').select()
+            )
+
+analytics_sanitized = Athena('adludio_curated_zone').table('analytics_sanitized')
+
+analytics_sanitized.insert(cta_query).show_query()
