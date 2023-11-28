@@ -1,6 +1,5 @@
-from enum import Enum, verify, UNIQUE
+from enum import Enum
 
-@verify(UNIQUE)
 class DataType(Enum):
     BOOLEAN = 'boolean'
     TINYINT = 'tinyint'

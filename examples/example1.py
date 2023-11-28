@@ -2,6 +2,7 @@ from athenaSQL import Athena, TempTable
 import athenaSQL.functions as F
 from athenaSQL.functions import col
 from athenaSQL.queries import withTable
+from athenaSQL.data_type import DataType
 
 merged_tracking_ttd = Athena('adludio_curated_zone').table('merged_tracking_ttd')
 
@@ -78,10 +79,10 @@ cleaned_data = merged_tracking_ttd.select(
         F.date_trunc('second', F.from_iso8601_timestamp(col('click_through_event'))))
     ).alias('dropped_click_duration'),
     
-    (F.when(F.tryOrNull(F.cast(col('matchedfoldposition'), 'int')) == 1, 'Any')
-    .when(F.tryOrNull(F.cast(col('matchedfoldposition'), 'int')) == 2, 'Above')
-    .when(F.tryOrNull(F.cast(col('matchedfoldposition'), 'int')) == 3, 'Below')
-    .when(F.tryOrNull(F.cast(col('matchedfoldposition'), 'int')) == 4, 'Unknown')
+    (F.when(F.try_cast(col('matchedfoldposition'), DataType.INT) == 1, 'Any')
+    .when(F.try_cast(col('matchedfoldposition'), DataType.INT) == 2, 'Above')
+    .when(F.try_cast(col('matchedfoldposition'), DataType.INT) == 3, 'Below')
+    .when(F.try_cast(col('matchedfoldposition'), DataType.INT) == 4, 'Unknown')
     .otherwise('Unknown')
     .alias('matchedfoldposition')),
 
@@ -147,13 +148,59 @@ aggregated_data = TempTable('cleaned_unknown').select(
             col('click_duration').between(0, 600) &
             col('dropped_click_duration').between(0, 600),
         1).otherwise(0)
-    ).alias('quality_dropped_click')
+    ).alias('quality_dropped_click'),
+
+    F.sum(F.when(col('eng_duration').between(0, 600), 1).otherwise(0)).alias('standard_engagements'),
+
+    F.sum(
+        F.when(
+            col('eng_duration').between(0, 600) &
+            col('click_duration').between(0, 600),
+            1).otherwise(0)
+    ).alias('standard_clicks'),
+    
+    F.sum(
+        F.when(
+            col('eng_duration').between(0, 600) &
+            col('click_duration').between(0, 600) &
+            col('dropped_click_duration').between(0, 600)
+            , 1).otherwise(0)
+    ).alias('standard_dropped_click'),
+
+    F.sum(
+        F.ifTrue(
+            col('rendered_duration_milliseconds') < 0,
+            0,
+            col('rendered_duration_milliseconds')
+        )
+    ).alias('otal_rendered_duration_milliseconds'),
+    
+    F.sum(F.ifTrue(col('eng_duration') < 0, 0, col('eng_duration'))).alias('total_eng_duration'),
+
+    F.sum(F.ifTrue(col('click_duration') < 0, 0, col('click_duration'))).alias('total_click_duration'),
+    
+    F.sum(F.ifTrue(col('dropped_click_duration') < 0, 0, col('dropped_click_duration'))).alias('total_dropped_click_duration'),
+    
+    F.sum(F.when(col('eng_duration').between(0, 30), col('eng_duration')).otherwise('0')).alias('quality_eng_duration'),
+    
+    F.sum(F.when(col('eng_duration').between(0, 30) & col('click_duration').between(0, 600), col('click_duration')).otherwise(0)).alias('quality_click_duration'),
+    
+    F.sum(F.when(col('eng_duration').between(0, 30) & col('click_duration').between(0, 600) & col('dropped_click_duration').between(0, 600), col('eng_duration')).otherwise(0)).alias('quality_dropped_click_duration'),
+    
+    F.sum(F.when(col('eng_duration').between(0, 600), col('eng_duration')).otherwise(0)).alias('standard_engagements_duration'),
+    
+    F.sum(F.when(col('eng_duration').between(0, 600) & col('click_duration').between(0, 600), col('click_duration')).otherwise(0)).alias('standard_clicks_duration'),
+    F.sum(F.when(col('eng_duration').between(0, 600) & col('click_duration').between(0, 600) & col('dropped_click_duration').between(0, 600), col('eng_duration')).otherwise(0)).alias('standard_dropped_click_duration'),
+    F.sum(F.try_cast(col('advertisercurrencyexchangeratefromusd'), DataType.DOUBLE)).alias('max_currency_rate'),
+    F.sum(F.try_cast(col('advertisercostinusdollars'), DataType.DOUBLE)).alias('max_advertiser_cost_usd'),
+    col('date')
 )
 
 # TODO
 # doc coalesce
 # fix when condition
 # support prentesis enclosed artimetic opertations
+# get col from table ***
 # changelog
 # release
 aggregated_data.show_query()

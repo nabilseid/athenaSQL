@@ -120,8 +120,8 @@ class Column(ComparisonMixin, ArithmeticMixin, LogicalMixin):
                         #    'bigint', 'double', 'float', 'char', 'varchar',
                         #    'string', 'binary', 'date', 'timestamp', 'decimal']
 
-        if dataType not in DataType:
-            raise TypeError(f'Unsupported data type {dataType.value}')
+        if not isinstance(dataType, DataType):
+            raise TypeError(f'`{type(dataType).__name__}` is not a type of `DataType`')
 
         if _try:
             self._sql_clause = f'TRY_CAST({self._sql_clause} AS {dataType.value.upper()})'
