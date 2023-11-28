@@ -1,6 +1,7 @@
 import re
 import copy
 from athenaSQL.column_type import ColumnType
+from athenaSQL.data_type import DataType
 from athenaSQL.operator_mixin import ComparisonMixin, \
     ArithmeticMixin, \
     LogicalMixin
@@ -96,26 +97,26 @@ class Column(ComparisonMixin, ArithmeticMixin, LogicalMixin):
 
         return AliasColumn(alias, host=self)
 
-    def cast(self, dataType, _try=False):
+    def cast(self, dataType: DataType, _try=False):
         """
         """
 
         # lowercase dataType to check if it is supported
-        dataType = dataType.lower()
+        # dataType = dataType.lower()
 
         # supported athena data types
         # https://docs.aws.amazon.com/athena/latest/ug/data-types.html
-        supported_types = ['boolean', 'tinyint', 'smallint', 'int', 'integer',
-                           'bigint', 'double', 'float', 'char', 'varchar',
-                           'string', 'binary', 'date', 'timestamp', 'decimal']
+        # supported_types = ['boolean', 'tinyint', 'smallint', 'int', 'integer',
+                        #    'bigint', 'double', 'float', 'char', 'varchar',
+                        #    'string', 'binary', 'date', 'timestamp', 'decimal']
 
-        if dataType not in supported_types:
-            raise TypeError(f'unsupported data type {dataType}')
+        if dataType not in DataType:
+            raise TypeError(f'Unsupported data type {dataType.value}')
 
         if _try:
-            self._sql_clause = f'TRY_CAST({self._sql_clause} AS {dataType.upper()})'
+            self._sql_clause = f'TRY_CAST({self._sql_clause} AS {dataType.value.upper()})'
         else:
-            self._sql_clause = f'CAST({self._sql_clause} AS {dataType.upper()})'
+            self._sql_clause = f'CAST({self._sql_clause} AS {dataType.value.upper()})'
 
         clone_obj = copy.deepcopy(self)
         return clone_obj

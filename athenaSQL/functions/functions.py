@@ -4,6 +4,7 @@ from athenaSQL.column import Column, NewColumn, \
 from athenaSQL.queries.query_abc import (
     _check_and_extract_list_or_valid_typed_arguments)
 
+from athenaSQL.data_type import DataType
 
 def _wrap_col(col, wrapper, parent_wrapper):
     """
@@ -164,7 +165,7 @@ def cast(col, _type):
     return col.cast(_type)
 
 
-def try_cast(col, _type):
+def try_cast(col, _type: DataType):
     """Like cast(), but returns null if the cast fails."""
 
     # if col is string constract column before operation
