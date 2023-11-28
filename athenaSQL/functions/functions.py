@@ -165,8 +165,19 @@ def cast(col, _type):
     return col.cast(_type)
 
 
-def try_cast(col, _type: DataType):
-    """Like cast(), but returns null if the cast fails."""
+def try_cast(col: Column, _type: DataType):
+    """Like cast(), but returns null if the cast fails.
+
+    Args:
+        col (Column): A column to be casted.
+        _type (DataType): An enum of supported data type to cast to.
+
+    Raises:
+        TypeError: raised if col is not a type of Column.
+
+    Returns:
+        Column: return a casted col.
+    """
 
     # if col is string constract column before operation
     if isinstance(col, str):

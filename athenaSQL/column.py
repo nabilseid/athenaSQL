@@ -97,8 +97,18 @@ class Column(ComparisonMixin, ArithmeticMixin, LogicalMixin):
 
         return AliasColumn(alias, host=self)
 
-    def cast(self, dataType: DataType, _try=False):
-        """
+    def cast(self, dataType: DataType, _try: bool = False):
+        """Cast column to a given data type.
+
+        Args:
+            dataType (DataType): An enum of supported data type to cast to.
+            _try (bool, optional): Opiton to use `TRY_CAST` instead of `CAST`. Defaults to False.
+        
+        Raises:
+            TypeError: raised if `dataType` is not a type of DataType.
+
+        Returns:
+            Column: return `self` for further method chaining.
         """
 
         # lowercase dataType to check if it is supported
