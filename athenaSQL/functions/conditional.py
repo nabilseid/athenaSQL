@@ -1,14 +1,17 @@
 from athenaSQL.column import Column, NewColumn, \
     ConditionalColumn, CaseColumn, WindowColumn
 
+from athenaSQL.utils import stringify
 
 def ifTrue(condition, true_value, false_value=None):
 
-    if not isinstance(condition, Column):
+    if not isinstance(condition, ConditionalColumn):
         raise TypeError(f'{condition} argument is not type of a `Column`')
     
+    _false_value = isinstance(false_value, Column) or false_value != None
+
     condition._sql_clause = (f'IF({condition}, {true_value}'
-                             f', {false_value})' if false_value != None else ')')
+                             f', {stringify(false_value)})' if _false_value != None else ')')
 
     return condition
 
