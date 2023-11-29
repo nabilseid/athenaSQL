@@ -1,11 +1,11 @@
 import re
 import copy
+from typing import Union, Optional
 from athenaSQL.column_type import ColumnType
 from athenaSQL.data_type import DataType
 from athenaSQL.operator_mixin import ComparisonMixin, \
     ArithmeticMixin, \
     LogicalMixin
-
 
 def validate_column_name(column):
     """
@@ -28,7 +28,6 @@ def areinstances(values, _type):
     if not isinstance(values, (list, tuple)):
         values = [values]
     return all(map(lambda v: isinstance(v, _type), values))
-
 
 class Column(ComparisonMixin, ArithmeticMixin, LogicalMixin):
     """
@@ -140,11 +139,8 @@ class Column(ComparisonMixin, ArithmeticMixin, LogicalMixin):
             raise TypeError('unsupported mixed types, '
                             'supported types are [str] or [int]')
 
-        range_clause = f'{lowerBound} AND {upperBound}'
-        if areinstances([lowerBound, upperBound], str):
-            range_clause = f"'{lowerBound}' AND '{upperBound}'"
-
-        self._sql_clause = f'{self._sql_clause} BETWEEN {range_clause}'
+        self._sql_clause = (f'{self._sql_clause} BETWEEN {stringify(lowerBound)}'
+                            f' AND {stringify(upperBound)}')
 
         return ConditionalColumn(self)
 
@@ -190,6 +186,7 @@ class NewColumn(Column):
     """
 
     def __init__(self, col_name, data_type):
+        #TODO change data_type to DataType enum
         super().__init__(col_name)
 
         if not isinstance(data_type, ColumnType):
@@ -313,3 +310,29 @@ class CaseColumn(Column):
         _column._sql_clause = self._build_case_sql()
 
         return _column
+
+
+def stringify(colOrPrimitive: Union[Column, int, str, float, bool],
+              singleQuote: Optional[bool] = True):
+    """Return a string representation of `colOrPrimitive`. If `colOrPrimitive`
+    is a string it will be enclosed in a pair of single quotes. 
+
+    Args:
+        colOrPrimitive (Union[Column, int, str, float, bool]): a column or 
+        primitive to stringify.
+        singleQuote (Optional[bool]): whether to use single or double quotes 
+        for string values. Default is True.
+
+    Raises:
+        TypeError: raised if `colOrPrimitive` is not of supported types. 
+
+    Returns:
+        str: return string representation of `colOrPrimitive`.
+    """
+    if not isinstance(colOrPrimitive, (Column, int, str, float, bool)):
+        raise TypeError(f'{type(colOrPrimitive).__name__} is not a type of '
+                        '(Column, int, str, float, bool)')
+
+    return (f'\'{colOrPrimitive}\'' 
+            if isinstance(colOrPrimitive, str) 
+            else str(colOrPrimitive))

@@ -1,6 +1,6 @@
 from typing import Union, Optional
 
-from athenaSQL.column import Column
+from athenaSQL.column import Column 
 
 
 def stringify(colOrPrimitive: Union[Column, int, str, float, bool],
