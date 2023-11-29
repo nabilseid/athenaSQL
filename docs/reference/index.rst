@@ -14,3 +14,4 @@ API Reference
     athenasql.column
     athenasql.queries
     athenasql.functions
+    athenasql.data_type
