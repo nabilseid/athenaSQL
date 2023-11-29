@@ -1,6 +1,8 @@
 from enum import Enum
 
 class DataType(Enum):
+    """Supported data types enum class.
+    """
     BOOLEAN = 'boolean'
     TINYINT = 'tinyint'
     SMALLINT = 'smallint'
