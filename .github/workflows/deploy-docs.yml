@@ -32,8 +32,6 @@ jobs:
           -nW 
           --keep-going 
           -v
-          
-          
 
       - name: Set up AWS CLI
         run: |
