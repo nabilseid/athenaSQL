@@ -88,7 +88,7 @@ cleaned_data = merged_tracking_ttd.select(
 
     col('advertisercurrencyexchangeratefromusd'),
     col('advertisercostinusdollars')
-)
+).filter(col('date').between('2021-10-01', '2021-12-31'))
 
 clean_id = lambda x : F.ifTrue(
     F.regexp_like(col(x), '^[A-Za-z0-9]+$'),
@@ -181,7 +181,7 @@ aggregated_data = TempTable('cleaned_unknown').select(
     
     F.sum(F.ifTrue(col('dropped_click_duration') < 0, 0, col('dropped_click_duration'))).alias('total_dropped_click_duration'),
     
-    F.sum(F.when(col('eng_duration').between(0, 30), col('eng_duration')).otherwise('0')).alias('quality_eng_duration'),
+    F.sum(F.when(col('eng_duration').between(0, 30), col('eng_duration')).otherwise(0)).alias('quality_eng_duration'),
     
     F.sum(F.when(col('eng_duration').between(0, 30) & col('click_duration').between(0, 600), col('click_duration')).otherwise(0)).alias('quality_click_duration'),
     
@@ -194,6 +194,25 @@ aggregated_data = TempTable('cleaned_unknown').select(
     F.sum(F.try_cast(col('advertisercurrencyexchangeratefromusd'), DataType.DOUBLE)).alias('max_currency_rate'),
     F.sum(F.try_cast(col('advertisercostinusdollars'), DataType.DOUBLE)).alias('max_advertiser_cost_usd'),
     col('date')
+).groupBy(
+    'advertiser_id',
+    'campaign_id',
+    'creative_id',
+    'line_item_id',
+    'game_key',
+    'city',
+    'region',
+    'country',
+    'ad_format',
+    'environment',
+    'browser',
+    'os',
+    'device_make',
+    'device_type',
+    'rendering_context',
+    'matchedfoldposition',
+    'site',
+    'date'  
 )
 
 # TODO
