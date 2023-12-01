@@ -17,10 +17,10 @@ class Athena:
     >>> cpe_table = Athena('adhouse').table('cpe') # abstraction table class for cpe
     >>> cpe_df = Athena.sql('SELECT * FROM adhouse.cpe') # cpe data in pandas df
     """
-    def __init__(self, database):
-        self.database = database
+    def __init__(self, database: str):
+        self.database: str = database
 
-    def table(self, table):
+    def table(self, table: str):
         """
         """
         return AthenaTable(database=self.database, table=table)
