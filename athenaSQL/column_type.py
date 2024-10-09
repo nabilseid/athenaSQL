@@ -22,7 +22,7 @@ class UnaryColumnType(ColumnType):
     def __init__(self, col_type: str):
         super().__init__(col_type)
 
-    def __call__(self, operand: Union[str, int]) -> self:
+    def __call__(self, operand: Union[str, int]):
         self._syntax: str = f'{self.col_type}({operand})'
         return self
 
@@ -35,7 +35,7 @@ class BinaryColumnType(ColumnType):
     def __init__(self, col_type: str):
         super().__init__(col_type)
 
-    def __call__(self, operand1: int, operand2: int) -> self:
+    def __call__(self, operand1: int, operand2: int):
         self._syntax: str = f'{self.col_type}({operand1}, {operand2})'
         return self
 

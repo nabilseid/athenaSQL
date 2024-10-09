@@ -2,14 +2,15 @@ from abc import ABC, abstractmethod
 
 from athenaSQL.errors import PartialQueryError
 from athenaSQL.column import Column, AliasColumn
+from athenaSQL.utils import normalize_sql
 
 
-def _exit_on_uncalled_preceding_method(method_called,
-                                       method_name,
-                                       preceding_method_name):
+def _exit_on_uncalled_preceding_method(
+    method_called, method_name, preceding_method_name
+):
     """
     throw exception if preceding method is not called.
-    
+
     params
     ------
     method_called: any
@@ -17,39 +18,40 @@ def _exit_on_uncalled_preceding_method(method_called,
         called
 
     method_name: string
-        function name of calling method 
+        function name of calling method
 
     preceding_method_name: string
-        function name of preceding method 
+        function name of preceding method
     """
 
     if not method_called:
-        raise SyntaxError(f".{method_name}() cannot be called before "
-                          f".{preceding_method_name}()")
+        raise SyntaxError(
+            f".{method_name}() cannot be called before " f".{preceding_method_name}()"
+        )
 
 
-def _exit_on_partial_query(query_attribute,
-                           method_name,
-                           query_name):
+def _exit_on_partial_query(query_attribute, method_name, query_name):
     """
     throw PartialQueryError if query_attribute satisfy nagation
     """
 
     if not query_attribute:
-        raise PartialQueryError(
-            f"{method_name}() is not called on {query_name}")
+        raise PartialQueryError(f"{method_name}() is not called on {query_name}")
 
 
 def _exit_on_override(previous_value, sql_clause, method_name):
     # exit if the previous value is not empty
     # this prevent overriding & multiple call of certain methods on chain
     if previous_value:
-        raise AttributeError(f"You can't reassign {sql_clause} in a query, "
-                             f"Use .{method_name} only once in your query")
+        raise AttributeError(
+            f"You can't reassign {sql_clause} in a query, "
+            f"Use .{method_name} only once in your query"
+        )
 
 
-def _check_and_extract_list_or_valid_typed_arguments(args,
-                                                     method_name, valid_types=(str, Column, AliasColumn)):
+def _check_and_extract_list_or_valid_typed_arguments(
+    args, method_name, valid_types=(str, Column, AliasColumn)
+):
 
     if not isinstance(valid_types, tuple):
         valid_types = (valid_types,)
@@ -74,8 +76,10 @@ def _check_and_extract_list_or_valid_typed_arguments(args,
         pass
 
     # if condition above doesn't fulfilled raise an error
-    raise TypeError(f".{method_name}() can only accept a list or "
-                    f"[{', '.join(map(lambda t: t.__name__, valid_types))}]")
+    raise TypeError(
+        f".{method_name}() can only accept a list or "
+        f"[{', '.join(map(lambda t: t.__name__, valid_types))}]"
+    )
 
 
 class QueryABC(ABC):
@@ -97,9 +101,12 @@ class QueryABC(ABC):
         pass
 
     def show_query(self):
-        """preivew sql query
-        """
+        """preivew sql query"""
         print(self._to_sql())
+
+    def normalize_query(self):
+        """Normalize the SQL query by removing extra whitespace, tabs, and newlines."""
+        return normalize_sql(self._to_sql())
 
     # TODO pkg athena and add as dependency
     # def exec(self, return_type='dataframe', dry_run=False):

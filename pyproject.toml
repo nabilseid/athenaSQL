@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "athenaSql"
-version = "0.1.0.a4"
+version = "0.1.0.a13"
 description = "SQL builder for AWS Athena, inspired by sparkSQL"
 authors = ["Nabil Seid <nabeelseid@gmail.com>"]
 license = "MIT"
@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 jinja2 = "^3.1.2"
 awswrangler = "^3.4.2"
 
