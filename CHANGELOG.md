@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.1.a1] - (2024-11-01)
+
+### Note
+
+- Removed awswranger
+
 ## [v0.1.1] - (2024-11-01)
 
 ### Fix
