@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "athenaSql"
-version = "0.1.0.a13"
+version = "0.1.1"
 description = "SQL builder for AWS Athena, inspired by sparkSQL"
 authors = ["Nabil Seid <nabeelseid@gmail.com>"]
 license = "MIT"

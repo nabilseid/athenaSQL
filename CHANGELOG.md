@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.1] - (2024-11-01)
+
+### Fix
+
+- Removed typing as it is causing circular import
+
 ## [v0.1.0.a2] - (2023-10-22)
 
 ### Fix
