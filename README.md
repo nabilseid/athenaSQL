@@ -45,3 +45,25 @@ FROM "database_name"."table_name"
 <!-- end usage -->
 
 <!-- end quickstart -->
+
+**Full documentation [Here](https://nabilseid.github.io/athenaSQL/)**
+
+## Milestone
+
+- Stable v1 release
+  - [ ] Add `DISTINCT`
+  - [ ] Add `LIKE` 
+  - [ ] Add partition `ADD` and `DROP`
+  - [ ] Add `JOIN` operations
+  - [ ] Add `JOIN` operations
+  - [ ] Add `UNION` operations
+  - [ ] Add `[CREATE, DROP] [DATABASE, TABLE]`
+  - [ ] Add `VIEW` operations
+  - [ ] FIX `_` prefixed table, view & col names [docs](https://docs.aws.amazon.com/athena/latest/ug/tables-databases-columns-names.html#names-that-begin-with-an-underscore)
+  - [ ] FIX reserved keywords [doc](https://docs.aws.amazon.com/athena/latest/ug/reserved-words.html)
+  - [ ] FIX SerDes in `CREATE` [docs](https://docs.aws.amazon.com/athena/latest/ug/serde-reference.html)
+
+
+
+- Add BigQuery Adapter
+  - [ ] TBD
